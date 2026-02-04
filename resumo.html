@@ -199,6 +199,44 @@ input::placeholder{color:#8a96a6}
   background:#ffffff;
   color:#0b1b2b;
 }
+
+.assinatura{
+  margin-top:14px;
+  padding:14px;
+  border-radius:14px;
+  text-align:center;
+  background:#f8fafc;
+  font-size:.8rem;
+  color:#4b5563;
+}
+
+.assinatura strong{
+  color:#0b1b2b;
+}
+
+.assinatura .cnpj{
+  margin-top:2px;
+  font-size:.75rem;
+  color:#6b7280;
+}
+
+.assinatura .linha-envio{
+  margin-top:8px;
+}
+
+.assinatura .slogan{
+  margin-top:10px;
+  font-size:.75rem;
+  font-style:italic;
+  color:#9ca3af;
+}
+
+.info-noturno{
+  font-size:.75rem;
+  color:#6b7280;
+  margin-top:6px;
+  line-height:1.4;
+}
 </style>
 </head>
 
@@ -213,15 +251,15 @@ input::placeholder{color:#8a96a6}
   </div>
 
   <div class="route">
-    <strong>Origem</strong><br>
+    <strong>📌🏁Origem/Destino</strong><br>
     <span id="origemTxt"></span>
     <div class="arrow">⬇</div>
-    <strong>Destino</strong><br>
+    <strong>🏁📌Destino/Origem</strong><br>
     <span id="destinoTxt"></span>
   </div>
 
   <div class="block">
-    <label>Tipo de viagem</label>
+    <label>🚖Tipo de viagem</label>
     <select id="tipoViagem">
       <option value="ida">Ida</option>
       <option value="bate_volta">Bate e volta</option>
@@ -231,13 +269,21 @@ input::placeholder{color:#8a96a6}
   </div>
 
   <div class="block">
-    <div class="extra"><span>Desvio de rota simples</span><input type="checkbox" id="desvioSimples"></div>
-    <div class="extra"><span>Volta da praia</span><input type="checkbox" id="voltaPraia"></div>
-    <div class="extra"><span>Taxa de feira</span><input type="checkbox" id="taxaFeira"></div>
+    <div class="extra"><span>🛣️Desvio de rota simples</span><input type="checkbox" id="desvioSimples"></div>
+    <div class="extra"><span>🏖️Volta da praia</span><input type="checkbox" id="voltaPraia"></div>
+    <div class="extra"><span>🚌Veículo 6 lugares / excesso de passageiros</span><input type="checkbox" id="veiculo6"></div>
+    <div class="extra"><span>🛒Taxa de feira</span><input type="checkbox" id="taxaFeira"></div>
+    <div class="extra"><span>🌙Adicional noturno</span><input type="checkbox" id="taxaNoturna"></div>
   </div>
 
+<div class="info-noturno">
+  🌙 <strong>Adicional noturno</strong><br>
+  Aplicado em corridas realizadas das <strong>22:30h às 05:00h</strong>,
+  conforme política do Grupo RF Driver.
+</div>
+
   <div class="block">
-    <label>Transporte de animal</label>
+    <label>🐶Transporte de animal</label>
     <select id="animal">
       <option value="0">Não</option>
       <option value="5">Pequeno – R$ 5</option>
@@ -248,12 +294,12 @@ input::placeholder{color:#8a96a6}
   </div>
 
   <div class="block">
-    <label>Tempo de espera (min)</label>
+    <label>⏱️Tempo de espera (min)</label>
     <input type="number" id="minutosEspera" placeholder="Ex: 10">
   </div>
 
   <div class="block">
-    <strong>Detalhamento</strong>
+    <strong>Detalhamento🗃️</strong>
     <div class="details" id="detalhamento"></div>
   </div>
 
@@ -262,6 +308,19 @@ input::placeholder{color:#8a96a6}
     <div class="total" id="total">R$ 0,00</div>
   </div>
 
+<div class="assinatura">
+  <strong>Grupo RF Driver</strong>
+  <div class="cnpj">CNPJ: 58.615.336/0001-49</div>
+
+  <div class="linha-envio">
+    <span>DRIVER</span><br>
+    <strong>Motorista credenciado</strong>
+  </div>
+
+  <div class="slogan">Mobilidade com excelência</div>
+</div>
+
+  <button class="btn-primary" onclick="enviarWhats()">Solicitar corrida no WhatsApp</button>
   <button class="btn-secondary" onclick="App.go('destino.html')">⬅ Voltar</button>
 
 </div>
@@ -283,7 +342,9 @@ document.getElementById("destinoTxt").innerText = destino;
 const tipoViagem = document.getElementById("tipoViagem");
 const desvioSimples = document.getElementById("desvioSimples");
 const voltaPraia = document.getElementById("voltaPraia");
+const veiculo6 = document.getElementById("veiculo6");
 const taxaFeira = document.getElementById("taxaFeira");
+const taxaNoturna = document.getElementById("taxaNoturna");
 const animalSel = document.getElementById("animal");
 const minutosEspera = document.getElementById("minutosEspera");
 const detalheDiv = document.getElementById("detalhamento");
@@ -309,9 +370,9 @@ function calcular(){
   const tipo = tipoViagem.value;
 
   if (tipo === "bate_volta") {
-    const acres = valorBase * 0.80;
+    const acres = valorBase * 1.00;
     total += acres;
-    detalhes.push(["Bate e volta (+80%)", acres]);
+    detalhes.push(["Bate e volta (+100%)", acres]);
     detalhesWhats.push(`♻️ *Bate e volta*: +R$ ${acres.toFixed(2)}`);
   }
 
@@ -352,6 +413,37 @@ function calcular(){
     detalhesWhats.push("🧺 *Taxa de feira*: +R$ 5,00");
   }
 
+if (veiculo6.checked) {
+  const acres = valorBase * Taxas.veiculo6Lugares.percentual;
+
+  total += acres;
+
+  detalhes.push([
+    "Veículo 6 lugares / excesso de passageiros (50%)",
+    acres
+  ]);
+
+  detalhesWhats.push(
+    `🚐 *Veículo 6 lugares / excesso de passageiros*: +R$ ${acres.toFixed(2)}`
+  );
+}
+
+if (taxaNoturna.checked) {
+  let acres = 0;
+
+  if (total <= Taxas.noturno.limite) {
+    acres = Taxas.noturno.valorFixo;
+    detalhes.push(["Adicional noturno", acres]);
+    detalhesWhats.push("🌙 *Adicional noturno*: +R$ 5,00");
+  } else {
+    acres = total * Taxas.noturno.percentual;
+    detalhes.push(["Adicional noturno (35%)", acres]);
+    detalhesWhats.push(`🌙 *Adicional noturno (35%)*: +R$ ${acres.toFixed(2)}`);
+  }
+
+  total += acres;
+}
+
   const animal = Number(animalSel.value || 0);
   if (animal > 0) {
     total += animal;
@@ -359,13 +451,25 @@ function calcular(){
     detalhesWhats.push(`🐶 *Transporte animal*: +R$ ${animal.toFixed(2)}`);
   }
 
-  const min = Number(minutosEspera.value || 0);
-  if (min >= Taxas.espera.blocoMinutos) {
-    const acres = Math.floor(min / Taxas.espera.blocoMinutos) * Taxas.espera.valorPorBloco;
-    total += acres;
-    detalhes.push([`Tempo de espera (${min} min)`, acres]);
-    detalhesWhats.push(`⏱️ *Tempo de espera*: +R$ ${acres.toFixed(2)}`);
-  }
+const min = Number(minutosEspera.value || 0);
+
+if (min >= 5) {
+  const minutosExcedentes = min - 5;
+  const acres =
+    Taxas.espera.valorInicial +
+    (minutosExcedentes * Taxas.espera.valorPorMinuto);
+
+  total += acres;
+
+  detalhes.push([
+    `Tempo de espera (${min} min)`,
+    acres
+  ]);
+
+  detalhesWhats.push(
+    `⏱️ *Tempo de espera (${min} min)*: +R$ ${acres.toFixed(2)}`
+  );
+}
 
   detalheDiv.innerHTML = detalhes.map(d => `
     <div>
@@ -387,8 +491,29 @@ document.querySelectorAll("select,input").forEach(el=>{
 
 calcular();
 
+function enviarWhats(){
+  const msg =
+`🚖 *RF Driver – Recibo de viagem*
+
+📌 *Origem*: ${origem}
+🏁 *Destino*: ${destino}
+
+*Detalhamento*
+${detalhesWhats.join("\n")}
+
+💰 *Total*: R$ ${App.get("total").toFixed(2)}
+
+—
+*Grupo RF Driver*
+CNPJ: 58.615.336/0001-49
+Enviado por:
+*Motorista credenciado*
+
+_Mobilidade com excelência_`;
+
+  window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
+}
 </script>
 
 </body>
-
 </html>
