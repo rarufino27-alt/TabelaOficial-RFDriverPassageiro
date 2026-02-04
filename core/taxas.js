@@ -8,10 +8,18 @@ const Taxas = {
   /* ================= TIPO DE VIAGEM ================= */
   tipoViagem: {
     ida: 0,                 // sem acréscimo
-    bateVolta: 0.8,         // +80% do valor base
+    bateVolta: 1,         // +100% do valor base
     idaVolta: 1,            // +100% do valor base
     idaVoltaEspera: 1.2     // 2x + 10%
   },
+
+/* ================= TAXA NOTURNA ================= */
+
+noturno: {
+  limite: 29,
+  valorFixo: 5,
+  percentual: 0.35
+},
 
   /* ================= TAXAS FIXAS ================= */
 
@@ -32,10 +40,17 @@ const Taxas = {
     longa: 20
   },
 
-  /* ================= ESPERA ================= */
-  espera: {
-    blocoMinutos: 5,
-    valorPorBloco: 3
-  }
+/* ================= VEÍCULO 6 LUGARES ================= */
+
+veiculo6Lugares: {
+  percentual: 0.5
+},
+
+/* ================= ESPERA ================= */
+espera: {
+  minutosGratis: 4,
+  valorInicial: 3,
+  valorPorMinuto: 0.6
+}
 
 };
