@@ -246,15 +246,15 @@ input::placeholder{color:#8a96a6}
 <div class="container">
 
   <div class="header">
-    <h1>RF Driver</h1>
-    <span>Orçamento de viagem</span>
+    <h1>Resumo RF Driver</h1>
+    <span>Resumo de Solicitação de Viagem</span>
   </div>
 
   <div class="route">
-    <strong>📌🏁Origem/Destino</strong><br>
+    <strong>📌Origem ou Destino</strong><br>
     <span id="origemTxt"></span>
     <div class="arrow">⬇</div>
-    <strong>🏁📌Destino/Origem</strong><br>
+    <strong>🏁Destino ou Origem</strong><br>
     <span id="destinoTxt"></span>
   </div>
 
@@ -286,10 +286,10 @@ input::placeholder{color:#8a96a6}
     <label>🐶Transporte de animal</label>
     <select id="animal">
       <option value="0">Não</option>
-      <option value="5">Pequeno – R$ 5</option>
-      <option value="7">Médio – R$ 7</option>
-      <option value="10">Grande – R$ 10</option>
-      <option value="20">Viagem longa – R$ 20</option>
+      <option value="4.99">Pequeno – R$ 4.99</option>
+      <option value="6.99">Médio – R$ 6.99</option>
+      <option value="9.99">Grande – R$ 9.99</option>
+      <option value="19.90">Viagem longa – R$ 19.90</option>
     </select>
   </div>
 
@@ -320,7 +320,7 @@ input::placeholder{color:#8a96a6}
   <div class="slogan">Mobilidade com excelência</div>
 </div>
 
-  <button class="btn-primary" onclick="enviarWhats()">Solicitar corrida no GRUPO</button>
+  <button class="btn-primary" onclick="enviarWhats()">Solicitar Viagem no grupo</button>
   <button class="btn-secondary" onclick="App.go('destino.html')">⬅ Voltar</button>
 
 </div>
@@ -398,19 +398,19 @@ function calcular(){
   if (desvioSimples.checked) {
     total += Taxas.desvioRotaSimples;
     detalhes.push(["Desvio simples", Taxas.desvioRotaSimples]);
-    detalhesWhats.push("🛣️ *Desvio simples*: +R$ 5,00");
+    detalhesWhats.push("🛣️ *Desvio de Rota*: +R$ 5,00");
   }
 
   if (voltaPraia.checked) {
     total += Taxas.voltaPraia;
     detalhes.push(["Volta da praia", Taxas.voltaPraia]);
-    detalhesWhats.push("🏖️ *Volta da praia*: +R$ 10,00");
+    detalhesWhats.push("🏖️ *Volta das praias*: +R$ 10,00");
   }
 
   if (taxaFeira.checked) {
     total += Taxas.feira;
     detalhes.push(["Taxa de feira", Taxas.feira]);
-    detalhesWhats.push("🧺 *Taxa de feira*: +R$ 5,00");
+    detalhesWhats.push("🛒 *Taxa de feira*: +R$ 5,00");
   }
 
 if (veiculo6.checked) {
@@ -419,12 +419,12 @@ if (veiculo6.checked) {
   total += acres;
 
   detalhes.push([
-    "Veículo 6 lugares / excesso de passageiros (50%)",
+    "Veículo 6 lugares (50%)",
     acres
   ]);
 
   detalhesWhats.push(
-    `🚐 *Veículo 6 lugares / excesso de passageiros*: +R$ ${acres.toFixed(2)}`
+    `🚐 *Veículo 6 lugares*: +R$ ${acres.toFixed(2)}`
   );
 }
 
@@ -493,10 +493,10 @@ calcular();
 
 function enviarWhats(){
   const msg =
-`🚖 *Solicitação de Viagem*
+`🚖 *Solicitação de Viagem RF Driver*
 
-📌 *Origem*: ${origem}
-🏁 *Destino*: ${destino}
+📌 *Origem/Destino*: ${origem}
+🏁 *Destino/Origem*: ${destino}
 
 *Detalhamento*
 ${detalhesWhats.join("\n")}
@@ -504,8 +504,10 @@ ${detalhesWhats.join("\n")}
 💰 *Total*: R$ ${App.get("total").toFixed(2)}
 
 —
-*Grupo RF Driver*
-CNPJ: 58.615.336/0001-49
+*_SOLICITAÇÃO DE VIAGEM_*
+
+_Grupo de Viagens RF Driver_
+_CNPJ: 58.615.336/0001-49_
 
 _Mobilidade com excelência_`;
 
@@ -515,4 +517,5 @@ _Mobilidade com excelência_`;
 
 </body>
 </html>
+
 
