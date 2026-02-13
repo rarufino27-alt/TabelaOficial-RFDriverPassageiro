@@ -493,26 +493,28 @@ calcular();
 
 function enviarWhats(){
   const msg =
-`🚖 *Solicitação de Viagem RF Driver*
+`🚖 *Solicitação de Viagem*
 
  *Origem ou Destino*
-${origem}
+ 
+➡️${origem}
 
  *Destino ou Origem*
-${destino}
-
-*Detalhamento*
+ 
+➡️${destino}
+---------------------------------
+*Informação Geral*
 
 ${detalhesWhats.join("\n")}
 
 💰 *Total*: R$ ${App.get("total").toFixed(2)}
 
-—
+__________________________________
 *_SOLICITAÇÃO DE VIAGEM_*
+*_Grupo de Passageiros_*
 
 _Grupo de Viagens RF Driver_
 _CNPJ: 58.615.336/0001-49_
-
 _Mobilidade com excelência_`;
 
   window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank");
@@ -521,6 +523,7 @@ _Mobilidade com excelência_`;
 
 </body>
 </html>
+
 
 
 
