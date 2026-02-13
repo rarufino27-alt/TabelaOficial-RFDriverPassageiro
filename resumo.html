@@ -546,8 +546,7 @@ const horaFormatada = agora.toLocaleTimeString("pt-BR", {
 
    const blocoDataHora = `
 _________________________________
-*_📅DATA E HORA DA SOLICITAÇÃO_*
-
+*_RF Driver Solicitação de Viagem 🚕_*
 📆 ${dataFormatada}
 ⏰ ${horaFormatada}
 `;
@@ -559,7 +558,7 @@ let blocoObservacao = "";
 if (observacao) {
   blocoObservacao = `
 _________________________________
-*_📝OBSERVAÇÃO DO PASSAGEIRO_*
+*_📝OBSERVAÇÕES_*
 
 _*${observacao}*_`;
 }
@@ -578,16 +577,15 @@ if (viagemAgendada.checked) {
 
   blocoAgendamento = `
 _________________________________
-*_📅VIAGEM AGENDADA_*
+*_AGENDAMENTO DE VIAGEM_*
 
-📆 ${dataFormatada}
-⏰ ${horaAgendamento.value}
+📆 *_${dataFormatada}_*
+⏰ *_${horaAgendamento.value}_*
 `;
 }
 
   const msg =
-`_*RF DRIVER*_
-${blocoDataHora}
+`${blocoDataHora}
 _________________________________
 *_Solicitação de Viagem 🚕_*
 _Detalhamento de taxas_
@@ -596,7 +594,7 @@ ${detalhesWhats.join("\n")}
 
 _💰 *Total*: R$ ${App.get("total").toFixed(2)}_
 __________________________________
-*_ALGUÉM DISPONÍVEL?? 🚕_*
+*_ALGUÉM DISPONÍVEL PARA ORIGEM E DESTINO ABAIXO???_*
 
  *_📌Origem ou Destino_*
 _👉${origem}_
@@ -615,6 +613,7 @@ _ALGUM MOTORISTA DISPONÍVEL?_`;
 
 </body>
 </html>
+
 
 
 
