@@ -59,5 +59,3 @@ const DataManager = {
     return rota ? rota.valor : null;
   }
 };
-
-
