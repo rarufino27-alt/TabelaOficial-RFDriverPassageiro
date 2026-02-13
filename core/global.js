@@ -60,4 +60,3 @@
   window.App = App;
   App.init();
 })();
-
