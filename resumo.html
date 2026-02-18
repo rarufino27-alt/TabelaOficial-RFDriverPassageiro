@@ -2,10 +2,11 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Resumo – RF DRIVER</title>
+<title>RF – Resumo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script src="core/global.js"></script>
+<script src="core/dinamico.js"></script>
+<script src="core/taxas.js"></script>
 
 <style>
 *{
@@ -16,406 +17,372 @@
 }
 
 body{
-  background:#000;
-  color:#fff;
+  background:#fff;
+  height:100vh;
+  overflow:hidden;
 }
 
-.container{
-  padding:30px 20px 140px;
-  max-width:420px;
-  margin:0 auto;
+.top{
+  background:#facc15;
+  padding:25px 20px 100px 20px;
+  border-bottom-left-radius:40px;
+  border-bottom-right-radius:40px;
 }
 
-/* LOGO */
-.logo-wrapper{
-  width:90px;
-  height:90px;
-  margin:0 auto 20px auto;
-  border-radius:50%;
-  background:#000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 0 30px rgba(250,204,21,.35);
-}
-
-.logo-img{
-  width:70%;
-}
-
-/* HEADER */
-.header{
-  text-align:center;
-  margin-bottom:25px;
-}
-
-.header h1{
+.logo{
+  font-weight:900;
   font-size:1.4rem;
+}
+
+.titulo{
   font-weight:700;
+  margin-top:5px;
 }
 
-.header span{
-  font-size:.85rem;
-  color:#a1a1aa;
+.content{
+  position:absolute;
+  top:130px;
+  left:50%;
+  transform:translateX(-50%);
+  width:90%;
+  max-width:420px;
+  bottom:110px;
+  overflow-y:auto;
 }
 
-/* CARD */
-.card{
-  background:#111;
-  border-radius:16px;
-  padding:16px;
-  border:1px solid #1c1c1c;
+.bloco{
+  background:#fff;
+  border-radius:18px;
+  padding:18px;
   margin-bottom:18px;
+  box-shadow:0 6px 15px rgba(0,0,0,.06);
+  animation:fadeUp .4s ease;
 }
 
-.section-title{
+@keyframes fadeUp{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+.bloco h3{
+  margin-bottom:12px;
+  font-size:.95rem;
+}
+
+.switch{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 0;
+}
+
+.toggle{
+  width:45px;
+  height:24px;
+  background:#ddd;
+  border-radius:20px;
+  position:relative;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.toggle::after{
+  content:"";
+  position:absolute;
+  width:18px;
+  height:18px;
+  background:#fff;
+  border-radius:50%;
+  top:3px;
+  left:3px;
+  transition:.3s;
+}
+
+.toggle.ativo{
+  background:#facc15;
+}
+
+.toggle.ativo::after{
+  left:24px;
+}
+
+select, textarea{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid #ddd;
+  margin-top:8px;
+  resize:none;
+}
+
+textarea{
+  min-height:80px;
   font-size:.85rem;
-  color:#a1a1aa;
-  margin-bottom:10px;
 }
 
-.route span{
-  display:block;
-  margin-bottom:6px;
-}
-
-.details div{
+.linha{
   display:flex;
   justify-content:space-between;
   margin-bottom:6px;
-  font-size:.9rem;
+  font-size:.85rem;
 }
 
-/* TOTAL */
-.total-box{
-  background:#151515;
-  border:1px solid #facc15;
-  border-radius:18px;
-  padding:20px;
-  text-align:center;
-  margin-bottom:20px;
+.linha span:first-child{
+  color:#777;
 }
 
 .total{
-  font-size:2.2rem;
-  font-weight:800;
-  color:#facc15;
-}
-
-/* SELECT */
-select{
-  width:100%;
-  padding:14px;
-  border-radius:14px;
-  background:#111;
-  color:#fff;
-  border:1px solid #1c1c1c;
-}
-
-/* BOTÃO FIXO */
-.cta-area{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  padding:20px;
-  background:#000;
-}
-
-.cta-primary{
-  width:100%;
-  padding:18px;
-  border:none;
-  border-radius:14px;
-  font-size:1.05rem;
+  font-size:1.2rem;
   font-weight:700;
-  background:#facc15;
-  color:#000;
-  cursor:pointer;
 }
 
-.cta-primary:active{
-  transform:scale(.97);
+.bottom-bar{
+  position:absolute;
+  bottom:25px;
+  left:20px;
+  right:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+button{
+  padding:12px 28px;
+  border:none;
+  border-radius:30px;
+  background:#facc15;
+  font-weight:700;
+  cursor:pointer;
 }
 </style>
 </head>
-
 <body>
 
-<div class="container">
-
-  <div class="logo-wrapper">
-    <img src="./icons/logo-1024.png" class="logo-img">
-  </div>
-
-  <div class="header">
-    <h1>Resumo da Viagem</h1>
-    <span>Confirme as informações</span>
-  </div>
-
-  <!-- ROTA -->
-  <div class="card route">
-    <div class="section-title">Itinerário</div>
-    <span>📌 Origem: <strong id="origemTxt"></strong></span>
-    <span>🏁 Destino: <strong id="destinoTxt"></strong></span>
-  </div>
-
-  <!-- DETALHAMENTO -->
-  <div class="card">
-    <div class="section-title">Detalhamento</div>
-    <div class="details" id="detalhamento"></div>
-  </div>
-
-  <!-- OBSERVAÇÃO -->
-  <div class="card" id="blocoObservacao" style="display:none;">
-    <div class="section-title">Observação</div>
-    <div id="observacaoTxt"></div>
-  </div>
-
-  <!-- PAGAMENTO -->
-  <div class="card">
-    <div class="section-title">Forma de Pagamento</div>
-    <select id="formaPagamento">
-      <option value="Dinheiro">Dinheiro</option>
-      <option value="Pix">Pix</option>
-      <option value="Cartão">Cartão</option>
-    </select>
-  </div>
-
-  <!-- VIAGEM AGENDADA -->
-<div class="card">
-  <div class="section-title">Agendamento</div>
-
-  <label style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-    <input type="checkbox" id="viagemAgendada" onchange="toggleAgendamento()" style="width:18px; height:18px;">
-    <span>Viagem Agendada</span>
-  </label>
-
-  <div id="areaAgendamento" style="display:none;">
-    <div style="margin-bottom:10px;">
-      <input type="date" id="dataAgendamento"
-        style="width:100%; padding:12px; border-radius:12px; background:#111; color:#fff; border:1px solid #1c1c1c;">
-    </div>
-
-    <div>
-      <input type="time" id="horaAgendamento"
-        style="width:100%; padding:12px; border-radius:12px; background:#111; color:#fff; border:1px solid #1c1c1c;">
-    </div>
-  </div>
+<div class="top">
+  <div class="logo">PASSAGEIRO RF</div>
+  <div class="titulo">Resumo</div>
 </div>
 
-  <!-- TOTAL -->
-  <div class="total-box">
-    <div class="total" id="total">R$ 0,00</div>
+<div class="content">
+
+  <div class="bloco">
+    <h3>Adicionais</h3>
+
+    <div class="switch">
+      <span>Saída de mercado</span>
+      <div class="toggle" id="mercadoToggle" onclick="toggleExtra('mercado')"></div>
+    </div>
+
+    <div class="switch">
+      <span>Saída de praia</span>
+      <div class="toggle" id="praiaToggle" onclick="toggleExtra('praia')"></div>
+    </div>
+
+    <div style="margin-top:10px;">
+      <label>Transporte animal</label>
+      <select id="animalSelect" onchange="selectAnimal()">
+        <option value="nao">Não</option>
+        <option value="pequeno">Pequeno</option>
+        <option value="medio">Médio</option>
+        <option value="grande">Grande</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="bloco">
+    <h3>Observações</h3>
+    <textarea id="observacaoInput" placeholder="Ex: Estou com mala grande, criança, preciso de troco, ponto de referência..."></textarea>
+  </div>
+
+  <div class="bloco">
+    <h3>Detalhamento</h3>
+    <div id="detalhamento"></div>
   </div>
 
 </div>
 
-<div class="cta-area">
-  <button class="cta-primary" onclick="solicitar()">
-    Solicitar Viagem no Grupo AGORA
-  </button>
+<div class="bottom-bar">
+  <div class="total" id="totalFinal">R$ 0,00</div>
+  <button onclick="solicitar()">Whatsapp</button>
 </div>
 
 <script>
-const origem = App.get("origem");
-const destino = App.get("destino");
-const valorBase = Number(App.get("valorBase") || 0);
-const config = App.get("taxasConfig") || {};
 
-document.getElementById("origemTxt").innerText = origem || "-";
-document.getElementById("destinoTxt").innerText = destino || "-";
+const corrida = JSON.parse(localStorage.getItem("rf_corrida_temp"));
+if(!corrida) window.location.href = "viagem.html";
 
-if(config.observacao && config.observacao.trim() !== ""){
-  document.getElementById("blocoObservacao").style.display = "block";
-  document.getElementById("observacaoTxt").innerText = config.observacao;
+const { origem, parada, destino, valor } = corrida;
+
+let extras = {
+  mercado: false,
+  praia: false,
+  animal: "nao"
+};
+
+function toggleExtra(tipo){
+  extras[tipo] = !extras[tipo];
+  document.getElementById(tipo+"Toggle").classList.toggle("ativo");
+  atualizarResumo();
 }
 
-let total = valorBase;
-let detalhes = [];
-
-detalhes.push(["Viagem base", valorBase]);
-
-// Tipo
-if(config.tipoViagem === "bate_volta"){
-  total += valorBase;
-  detalhes.push(["Bate e volta", valorBase]);
+function selectAnimal(){
+  extras.animal = document.getElementById("animalSelect").value;
+  atualizarResumo();
 }
 
-if(config.tipoViagem === "ida_volta"){
-  total += valorBase;
-  detalhes.push(["Ida e volta", valorBase]);
+function aplicarNoturno(valorBase){
+  const agora = new Date();
+  const hora = agora.getHours() + (agora.getMinutes()/60);
+  if(hora >= 22.5 || hora <= 5){
+    return valorBase + Taxas.noturno.valorFixo;
+  }
+  return valorBase;
 }
 
-if(config.tipoViagem === "ida_volta_espera"){
-  const acres = valorBase + (valorBase*0.10);
-  total += acres;
-  detalhes.push(["Ida e volta + espera", acres]);
-}
+function atualizarResumo(){
 
-// Fixas
-if(config.desvioSimples){
-  total += 5;
-  detalhes.push(["Desvio rápido",5]);
-}
+  const categoria = localStorage.getItem("rf_categoria") || "Driver";
 
-if(config.voltaPraia){
-  total += 10;
-  detalhes.push(["Volta das praias",10]);
-}
+  let base = valor;
+  base = aplicarNoturno(base);
+  let total = Dinamico.ativo ? base * Dinamico.multiplicador : base;
 
-if(config.taxaFeira){
-  total += 5;
-  detalhes.push(["Taxa de feira",5]);
-}
+  let detalhamento = "";
 
-if(config.veiculo6){
-  const acres = valorBase*0.5;
-  total += acres;
-  detalhes.push(["Veículo 6 lugares (50%)",acres]);
-}
+  detalhamento += `
+    <div class="linha">
+      <span>Categoria</span>
+      <span>${categoria}</span>
+    </div>
+  `;
 
-// 🔥 ADICIONAL NOTURNO CORRIGIDO
-if(config.taxaNoturna){
-  let acres = 0;
+  detalhamento += `
+    <div class="linha">
+      <span>Valor base</span>
+      <span>R$ ${base.toFixed(2)}</span>
+    </div>
+  `;
 
-  if(valorBase <= 29){
-    acres = 5;
-    detalhes.push(["Adicional noturno", 5]);
-  }else{
-    acres = valorBase * 0.35;
-    detalhes.push(["Adicional noturno (35%)", acres]);
+  if(extras.mercado){
+    total += Taxas.feira;
+    detalhamento += `
+      <div class="linha">
+        <span>Saída de mercado</span>
+        <span>+ R$ ${Taxas.feira.toFixed(2)}</span>
+      </div>
+    `;
   }
 
-  total += acres;
-}
+  if(extras.praia){
+    total += Taxas.voltaPraia;
+    detalhamento += `
+      <div class="linha">
+        <span>Saída de praia</span>
+        <span>+ R$ ${Taxas.voltaPraia.toFixed(2)}</span>
+      </div>
+    `;
+  }
 
-// Animal
-if(Number(config.animal)>0){
-  total += Number(config.animal);
-  detalhes.push(["Transporte animal",Number(config.animal)]);
-}
+  if(extras.animal !== "nao"){
+    const valorAnimal = Taxas.animal[extras.animal];
+    total += valorAnimal;
+    detalhamento += `
+      <div class="linha">
+        <span>Animal (${extras.animal})</span>
+        <span>+ R$ ${valorAnimal.toFixed(2)}</span>
+      </div>
+    `;
+  }
 
-// Espera
-if(Number(config.minutosEspera)>=5){
-  const min = Number(config.minutosEspera);
-  const acres = 3 + ((min-5)*0.60);
-  total += acres;
-  detalhes.push([`Tempo de espera (${min} min)`,acres]);
-}
+  detalhamento += `
+    <div class="linha total">
+      <span>Total</span>
+      <span>R$ ${total.toFixed(2)}</span>
+    </div>
+  `;
 
-document.getElementById("detalhamento").innerHTML =
-detalhes.map(d=>`
-  <div>
-    <span>${d[0]}</span>
-    <strong>R$ ${Number(d[1]).toFixed(2)}</strong>
-  </div>
-`).join("");
+  document.getElementById("detalhamento").innerHTML = detalhamento;
+  document.getElementById("totalFinal").innerText = "R$ " + total.toFixed(2);
 
-document.getElementById("total").innerText =
-`R$ ${total.toFixed(2)}`;
-
-App.set("total", total);
-
-  function toggleAgendamento(){
-  const check = document.getElementById("viagemAgendada");
-  const area = document.getElementById("areaAgendamento");
-
-  area.style.display = check.checked ? "block" : "none";
+  localStorage.setItem("rf_total_final", total);
 }
 
 function solicitar(){
 
-  const agora = new Date();
+  atualizarResumo();
 
+  const agora = new Date();
   const dataFormatada = agora.toLocaleDateString("pt-BR");
   const horaFormatada = agora.toLocaleTimeString("pt-BR", {
     hour: "2-digit",
     minute: "2-digit"
   });
 
-  const blocoDataHora = `
-*SOLICITAÇÃO DE VIAGEM*
-*${dataFormatada}*
-*${horaFormatada}*`;
+  const observacao = document.getElementById("observacaoInput").value.trim();
 
-  const observacaoInput = document.getElementById("observacaoInput"); // ajuste se necessário
-  const observacao = observacaoInput ? observacaoInput.value.trim() : "";
+  const detalhamentoDiv = document.getElementById("detalhamento");
+
+  let linhas = [];
+  detalhamentoDiv.querySelectorAll(".linha").forEach(linha => {
+      const spans = linha.querySelectorAll("span");
+      if(spans.length === 2){
+          linhas.push(`${spans[0].innerText}: ${spans[1].innerText}`);
+      }
+  });
+
+  const detalhamentoTexto = linhas.join("\n");
+  const totalFinal = Number(localStorage.getItem("rf_total_final")) || 0;
 
   let blocoObservacao = "";
-
-  if (observacao) {
+  if(observacao){
     blocoObservacao = `
 _____________________________
 *Observações*
-
-*${observacao}*`;
+${observacao}`;
   }
 
-  // Caso você tenha checkbox de agendamento
-  const viagemAgendada = document.getElementById("viagemAgendada"); 
-  const dataAgendamento = document.getElementById("dataAgendamento");
-  const horaAgendamento = document.getElementById("horaAgendamento");
+  let blocoItinerario = `
+📍 Origem:
+${origem}
+`;
 
-  let blocoAgendamento = "";
-
-  if (viagemAgendada && viagemAgendada.checked) {
-
-    if (!dataAgendamento.value || !horaAgendamento.value) {
-      alert("Por favor, selecione data e hora do agendamento.");
-      return;
-    }
-
-    const dataFormatadaAg = new Date(dataAgendamento.value + "T00:00")
-      .toLocaleDateString("pt-BR");
-
-    blocoAgendamento = `
-_____________________________
-*VIAGEM AGENDADA*
-
-📆 ${dataFormatadaAg}
-⏰ ${horaAgendamento.value}
+  if(parada && parada.trim() !== ""){
+    blocoItinerario += `
+🛑 Parada:
+${parada}
 `;
   }
 
-  // Montar detalhamento das taxas
-  let detalhesWhats = detalhes.map(d =>
-    `• ${d[0]}: R$ ${Number(d[1]).toFixed(2)}`
-  );
+  blocoItinerario += `
+🏁 Destino:
+${destino}
+`;
 
   const msg =
-`${blocoDataHora}
+`*Solicitação de Viagem RF*
+${dataFormatada}
+${horaFormatada}
 ${blocoObservacao}
 _____________________________
 *Detalhamento da viagem*
 
-${detalhesWhats.join("\n")}
+${detalhamentoTexto}
 _____________________________
-*ALGUÉM DISPONÍVEL?????*
 
- *📌 Origem*
-👉 ${origem}
-
- *🏁 Destino*
-👉 ${destino}
-${blocoAgendamento}
+*Alguem Disponível???*
+${blocoItinerario}
 _____________________________
-*💰 Total: R$ ${total.toFixed(2)}*
+💰 *Total: R$ ${totalFinal.toFixed(2)}*
 
-*RF Driver*
-_58.615.336/0001-49_
-_Mobilidade com Excelência_`;
+Aguardo o retorno. Alguem disponível?`;
 
   const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
-
-  window.location.href = url;
+  window.open(url, "_blank");
 }
+
+atualizarResumo();
+
 </script>
 
 </body>
 </html>
-
-
-
-
-
